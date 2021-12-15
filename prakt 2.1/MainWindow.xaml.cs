@@ -30,12 +30,17 @@ namespace prakt_2._1
         private int[] _array;
 
         private void Create(object sender, RoutedEventArgs e)
-        {            
-            if (int.TryParse(column.Text, out int count) && count > 0)
+        {
+            try
             {
+                int count = Convert.ToInt32(column.Text);
                 _array = new int[count];
                 dataGrid.ItemsSource = VisualArray.ToDataTable(_array).DefaultView;
                 rezultOut.Clear();
+            }
+            catch
+            {
+                MessageBox.Show("Введён неверный размер таблицы", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -52,17 +57,19 @@ namespace prakt_2._1
 
         private void FillDataGrid(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(numberMin.Text, out int minimum)) return;
-            if (!int.TryParse(numberMax.Text, out int maximum)) return;
-            if (!int.TryParse(column.Text, out int count)) return;
-            if (maximum > minimum && count > 0)
+            try
             {
+                int minimum = Convert.ToInt32(numberMin.Text);
+                int maximum = Convert.ToInt32(numberMax.Text);
+                int count = Convert.ToInt32(column.Text);
                 _array = new int[count];
                 ArrayOperation.FillArrayRandom(_array, minimum, maximum);
                 dataGrid.ItemsSource = VisualArray.ToDataTable(_array).DefaultView;
             }
-            else MessageBox.Show("Введены неверные данные", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-
+            catch
+            {
+                MessageBox.Show("Введены неверные данные", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -70,7 +77,7 @@ namespace prakt_2._1
             //Определяем номер столбца
             int indexColumn = e.Column.DisplayIndex;
             //Проверяем правильное значение ввел пользователь
-            if (!Int32.TryParse(((TextBox)e.EditingElement).Text, out int number))
+            if (!int.TryParse(((TextBox)e.EditingElement).Text, out int number))
             {
                 MessageBox.Show("Введены неверные данные", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
